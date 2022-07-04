@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from actions import EscapeAction, MovementAction
 from input_handlers import EventHandler
+from entity import Entity
 import tcod
 WIDTH, HEIGHT = 80, 60
 
@@ -8,9 +9,6 @@ def main() -> None:
 
     screen_width=80
     screen_height=50
-    player_x = int(screen_width / 2)
-    player_y = int(screen_height / 2)
-
 
 
     tileset= tcod.tileset.load_tilesheet(
@@ -19,6 +17,15 @@ def main() -> None:
 
     event_handler = EventHandler()
     #creating main console:
+    player = Entity(int(screen_width / 2), int(screen_height / 2), "@", (255, 255, 255))
+    #the player
+    npc = Entity(int(screen_width / 2 - 5), int(screen_height / 6), "T", (255, 25, 0))
+    npc = Entity(int(screen_width / 2 - 23), int(screen_height / 2), "O", (60, 35, 0))
+    npc = Entity(int(screen_width / 2 - 13), int(screen_height / 4), "%", (40, 255, 0))
+    # a rando
+    entities = {npc, player}
+# full list of entities. will probably get moved later
+
     console = tcod.Console(screen_width,screen_height, order="F")
     # Create a window based on this console and tileset.
     with tcod.context.new(
@@ -26,7 +33,7 @@ def main() -> None:
     ) as context:
         while True:
             console.clear()
-            console.print(x=player_x, y=player_y, string="@")
+            console.print(x=player.x, y=player.y, string=player.char, fg=player.colour)
             context.present(console)#show the console
 
             for event in tcod.event.wait():
@@ -41,8 +48,7 @@ def main() -> None:
                 if isinstance(action, MovementAction):
                     # if there is an instance of a movement action 
                     #changing the player X,Y if there is a movemnet action
-                    player_x += action.dx
-                    player_y += action.dy
+                    player.move(dx=action.dx, dy=action.dy)
 
                 elif isinstance(action, EscapeAction):
                     #obvs another escape action..
