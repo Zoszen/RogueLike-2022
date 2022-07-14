@@ -18,8 +18,8 @@ def main() -> None:
     "Tileset.png", 32, 8,  tcod.tileset.CHARMAP_TCOD
     
     )
-    
-    
+    GameMap.do_step()
+
     event_handler = EventHandler()
     #creating main console
     player = Entity(int(screen_width / 2), int(screen_height / 2), "@", (255, 255, 255))
@@ -42,6 +42,7 @@ def main() -> None:
             engine.render(console=console, context=context)
             events = tcod.event.wait()
             engine.handle_events(events)
+
 
 
 
