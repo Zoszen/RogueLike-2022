@@ -4,6 +4,7 @@ from input_handlers import EventHandler
 from entity import Entity
 from game_map import GameMap
 import tcod
+
 WIDTH, HEIGHT = 80, 60
 
 def main() -> None:
@@ -18,14 +19,13 @@ def main() -> None:
     "Tileset.png", 32, 8,  tcod.tileset.CHARMAP_TCOD
     
     )
-    GameMap.do_step()
 
     event_handler = EventHandler()
     #creating main console
     player = Entity(int(screen_width / 2), int(screen_height / 2), "@", (255, 255, 255))
     #the player
     orc = Entity(int(screen_width / 2 - 15), int(screen_height / 6), "O", (255, 255, 0))
-    
+
     # a rando
     entities = {player, orc}
 

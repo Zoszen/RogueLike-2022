@@ -1,6 +1,7 @@
 import numpy as np
+import scipy.signal
 from tcod.console import Console
-from random import randrange, random
+import random
 import tile_types
 
 map_width = 80
@@ -11,44 +12,30 @@ class GameMap:
         self.tiles = np.full((width, height), fill_value=tile_types.thick_tree, order="F")
         for x in range(width):
             for y in range(height):
-                if random.random() < 0.4:
+                if random.random() < 0.5:
                     self.tiles[x][y] = tile_types.floor
 
-    def do_step():
-        tile
-        for tile in GameMap:
-            if not tile_types.floor:
-                neighbours = GameMap.get_neighbours(GameMap)
-                if len(neighbours) > 0:
-                   prey = neighbours[randrange(len(neighbours))]
-                
-   
-   
-    def get_tile(x,y):
-        for tile in GameMap:
-            if tile.x == x and tile.y == y:
-                return tile             
 
-    def get_neighbours(tile,x:int,y:int):
-    
-        
-        neighbours = []
-        for y in range(-1,1):
-            for x in range(-1,1):
-                if tile.x + x < 0 or tile.x + x > map_width-1 or tile.y + y < 0 or tile.y + y > map_height-1:
-                    pass
-                else:
-                    neighbour_tile = GameMap.get_tile(tile.x+x, tile.y+y)
-                    if neighbour_tile == tile_types.floor:
-                        neighbours.append(neighbour_tile)
+        for x in range(width):
+            for y in range(height):
+             N = [
+                 [1, 1, 1],
+                 [1, 0, 1],
+                 [1, 1, 1],
+             ]
 
-                return neighbours
-                
-        if len(neighbours) > 2:
-            tile.tiles[x][y] = tile_types.floor
-                
+             neighboring_walls = scipy.signal.convolve2d(self.tiles != tile_types.floor, N, mode='same')
+             
 
-                
+             
+             walls_to_floors = (self.tiles != tile_types.floor) & (neighboring_walls <= 3)
+             floors_to_walls = (self.tiles == tile_types.floor) & (neighboring_walls >= 5)
+             
+             self.tiles[walls_to_floors] = tile_types.floor
+             self.tiles[floors_to_walls] = tile_types.thick_tree
+           
+             
+               
 
 
 
@@ -58,7 +45,7 @@ class GameMap:
 
 
  
- #   def __init__(self, width: int, height: int):
+ #attempt 1   def __init__(self, width: int, height: int):
  #       tree_count = 0
   #      self.width = width
   #      self.height = height
